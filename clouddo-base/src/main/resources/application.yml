@@ -13,3 +13,13 @@ mybatis:
   mapper-locations: mapper/**Mapper.xml
   configuration:
       map-underscore-to-camel-case: true
+security:
+  oauth2:
+    client:
+      access-token-uri: http://localhost:8005/oauth/token
+      user-authorization-uri: http://localhost:8005/oauth/authorize
+      client-id: app
+      clientAuthenticationScheme: form
+    resource:
+      user-info-uri: http://localhost:8005/user/tokenUser
+      prefer-token-info: false

@@ -14,6 +14,15 @@ spring:
 ribbon:
     ReadTimeout: 60000
     ConnectTimeout: 60000
+security:
+  oauth2:
+    client:
+      access-token-uri: http://localhost:8005/oauth/token
+      user-authorization-uri: http://localhost:8005/oauth/authorize
+      client-id: app
+    resource:
+      user-info-uri: http://localhost:8005/user
+      prefer-token-info: false
 
 
 

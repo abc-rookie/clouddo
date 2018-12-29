@@ -22,6 +22,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -124,5 +125,10 @@ public class UserController extends BaseController {
 	boolean exits(@RequestParam Map<String, Object> params) {
 		// 存在，不通过，false
 		return !userService.exits(params);
+	}
+
+	@GetMapping("/tokenUser")
+	public Principal user(Principal user){
+		return user;
 	}
 }

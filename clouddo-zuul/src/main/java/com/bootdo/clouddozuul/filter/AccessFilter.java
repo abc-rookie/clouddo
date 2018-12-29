@@ -52,30 +52,30 @@ public class AccessFilter extends ZuulFilter {
     @Override
     public Object run() {
         RequestContext ctx = RequestContext.getCurrentContext();
-        HttpServletRequest request = ctx.getRequest();
-        final String requestUri = request.getRequestURI();
-        if (isStartWith(requestUri)) {
-            return null;
-        }
-        String accessToken = request.getHeader(CommonConstants.CONTEXT_TOKEN);
-        if(null == accessToken || accessToken == ""){
-            accessToken = request.getParameter(CommonConstants.TOKEN);
-        }
-        if (null == accessToken) {
-            setFailedRequest(R.error401(), 200);
-            return null;
-        }
-        try {
-            UserToken userToken = JwtUtils.getInfoFromToken(accessToken);
-        } catch (Exception e) {
-            setFailedRequest(R.error401(), 200);
-            return null;
-        }
-        FilterContextHandler.setToken(accessToken);
-        if(!havePermission(request)){
-            setFailedRequest(R.error403(), 200);
-            return null;
-        }
+//        HttpServletRequest request = ctx.getRequest();
+//        final String requestUri = request.getRequestURI();
+//        if (isStartWith(requestUri)) {
+//            return null;
+//        }
+//        String accessToken = request.getHeader(CommonConstants.CONTEXT_TOKEN);
+//        if(null == accessToken || accessToken == ""){
+//            accessToken = request.getParameter(CommonConstants.TOKEN);
+//        }
+//        if (null == accessToken) {
+//            setFailedRequest(R.error401(), 200);
+//            return null;
+//        }
+//        try {
+//            UserToken userToken = JwtUtils.getInfoFromToken(accessToken);
+//        } catch (Exception e) {
+//            setFailedRequest(R.error401(), 200);
+//            return null;
+//        }
+//        FilterContextHandler.setToken(accessToken);
+//        if(!havePermission(request)){
+//            setFailedRequest(R.error403(), 200);
+//            return null;
+//        }
         Set<String> headers = (Set<String>) ctx.get("ignoredHeaders");
         //We need our JWT tokens relayed to resource servers
         //添加自己header
