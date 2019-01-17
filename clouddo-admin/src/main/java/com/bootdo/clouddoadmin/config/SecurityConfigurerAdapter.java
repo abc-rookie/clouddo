@@ -1,7 +1,6 @@
 package com.bootdo.clouddoadmin.config;
 
 
-import com.bootdo.clouddoadmin.service.impl.UserDetailImpl;
 import com.bootdo.clouddoadmin.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    UserDetailImpl userDetail;
+    UserDetailsService userDetail;
 
     @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
     @Override
