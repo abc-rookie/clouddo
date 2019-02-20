@@ -1,14 +1,5 @@
 package com.bootdo.clouddozuul.filter;
 
-import com.bootdo.clouddocommon.constants.CommonConstants;
-import com.bootdo.clouddocommon.context.FilterContextHandler;
-import com.bootdo.clouddocommon.dto.MenuDTO;
-import com.bootdo.clouddocommon.dto.UserToken;
-import com.bootdo.clouddocommon.utils.JSONUtils;
-import com.bootdo.clouddocommon.utils.JwtUtils;
-import com.bootdo.clouddocommon.utils.R;
-import com.bootdo.clouddocommon.utils.StringUtils;
-import com.bootdo.clouddozuul.prc.admin.MenuService;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +18,6 @@ import java.util.Set;
  * @Author bootdo 1992lcg@163.com
  */
 public class AccessFilter extends ZuulFilter {
-    @Autowired
-    MenuService menuService;
 
 
     private String ignorePath = "/api-admin/login";
@@ -90,40 +79,5 @@ public class AccessFilter extends ZuulFilter {
 //        return null;
     }
 
-    private void setFailedRequest(Object body, int code) {
-        RequestContext ctx = RequestContext.getCurrentContext();
-        ctx.setResponseStatusCode(code);
-        HttpServletResponse response = ctx.getResponse();
-        PrintWriter out = null;
-        try{
-            out = response.getWriter();
-            out.write(JSONUtils.beanToJson(body));
-            out.flush();
-        }catch(IOException e){
-            e.printStackTrace();
-        }
-        ctx.setSendZuulResponse(false);
-    }
 
-    private boolean havePermission(HttpServletRequest request){
-        String currentURL = request.getRequestURI();
-        List<MenuDTO> menuDTOS = menuService.userMenus();
-        for(MenuDTO menuDTO:menuDTOS){
-            if(currentURL!=null&&null!=menuDTO.getUrl()&&currentURL.startsWith(menuDTO.getUrl())){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean isStartWith(String requestUri) {
-        boolean flag = false;
-        for (String s : ignorePath.split(",")) {
-
-            if (requestUri.startsWith(s)) {
-                return true;
-            }
-        }
-        return flag;
-    }
 }
