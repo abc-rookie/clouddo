@@ -10,12 +10,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ClouddoZuulApplicationTests {
-	@Autowired
-	MenuService menuService;
 
-	@Test
-	public void contextLoads() {
-		menuService.userMenus();
-	}
+    @Test
+    public void contextLoads() {
+
+    }
 
 }
