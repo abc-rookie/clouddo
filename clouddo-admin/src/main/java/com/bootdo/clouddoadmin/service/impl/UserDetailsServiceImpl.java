@@ -4,8 +4,11 @@ import com.bootdo.clouddoadmin.dao.UserDao;
 import com.bootdo.clouddoadmin.domain.UserDO;
 import com.bootdo.clouddoadmin.secuity.CurrentUser;
 import com.bootdo.clouddoadmin.service.MenuService;
+import com.bootdo.clouddoadmin.utils.MD5Utils;
 import com.bootdo.clouddocommon.exception.CDException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,10 +16,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author bootdo
@@ -38,6 +39,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
         UserDO userDO = userDOS.get(0);
         Set<String> perms = menuService.listPerms(userDO.getUserId());
-        return new CurrentUser(username, userDO.getPassword(), userDO.getUserId(), new HashSet<>());
+        Set<GrantedAuthority> authorities = perms.stream().filter(Objects::nonNull).map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
+        return new CurrentUser(username, userDO.getPassword(), userDO.getUserId(), authorities);
     }
+
 }

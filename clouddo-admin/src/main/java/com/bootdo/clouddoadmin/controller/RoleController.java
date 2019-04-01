@@ -7,6 +7,7 @@ import com.bootdo.clouddocommon.utils.PageUtils;
 import com.bootdo.clouddocommon.utils.Query;
 import com.bootdo.clouddocommon.utils.R;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class RoleController {
     @Autowired
     RoleService roleService;
 
+    @PreAuthorize("hasAuthority('admin:role:role')")
     @GetMapping()
     PageUtils list(@RequestParam Map<String, Object> params) {
         Query query = new Query(params);

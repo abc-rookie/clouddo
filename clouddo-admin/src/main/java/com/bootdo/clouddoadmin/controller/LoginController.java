@@ -5,6 +5,7 @@ import com.bootdo.clouddoadmin.service.MenuService;
 import com.bootdo.clouddoadmin.service.TokenService;
 import com.bootdo.clouddoadmin.service.UserService;
 import com.bootdo.clouddoadmin.utils.MD5Utils;
+import com.bootdo.clouddoadmin.utils.SecuityUtils;
 import com.bootdo.clouddocommon.annotation.Log;
 import com.bootdo.clouddocommon.context.FilterContextHandler;
 import com.bootdo.clouddocommon.dto.LoginDTO;
@@ -45,7 +46,7 @@ public class LoginController {
         Map<String, Object> param = new HashMap<>();
         param.put("username", username);
         List<UserDO> userDOs = userService.list(param);
-        if(userDOs.size()<1){
+        if (userDOs.size() < 1) {
             return R.error("用户或密码错误");
         }
         UserDO userDO = userDOs.get(0);
@@ -53,9 +54,9 @@ public class LoginController {
             return R.error("用户或密码错误");
         }
         UserToken userToken = new UserToken(userDO.getUsername(), userDO.getUserId().toString(), userDO.getName());
-        String token="";
+        String token = "";
         try {
-            token = JwtUtils.generateToken(userToken, 2*60*60*1000);
+            token = JwtUtils.generateToken(userToken, 2 * 60 * 60 * 1000);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -63,9 +64,14 @@ public class LoginController {
         menuService.clearCache(userDO.getUserId());
         // String token = tokenService.createToken(userDO.getUserId());
         return R.ok("登录成功")
-                .put("token", token).put("user",userDO)
-                .put("perms",menuService.PermsByUserId(userDO.getUserId()))
-                .put("router",menuService.RouterDTOsByUserId(userDO.getUserId()));
+                .put("token", token).put("user", userDO)
+                .put("perms", menuService.PermsByUserId(userDO.getUserId()))
+                .put("router", menuService.RouterDTOsByUserId(userDO.getUserId()));
+    }
+
+    @GetMapping("/router")
+    R router() {
+        return R.ok().put("router", menuService.RouterDTOsByUserId(SecuityUtils.getCurrentUser().getId()));
     }
 
 
