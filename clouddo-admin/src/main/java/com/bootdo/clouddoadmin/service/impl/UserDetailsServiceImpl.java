@@ -40,7 +40,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         UserDO userDO = userDOS.get(0);
         Set<String> perms = menuService.listPerms(userDO.getUserId());
         Set<GrantedAuthority> authorities = perms.stream().filter(Objects::nonNull).map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
-        return new CurrentUser(username, userDO.getPassword(), userDO.getUserId(), authorities);
+        return new CurrentUser(username, userDO.getPassword(), userDO.getUserId(), userDO.getName(),authorities);
     }
 
 }

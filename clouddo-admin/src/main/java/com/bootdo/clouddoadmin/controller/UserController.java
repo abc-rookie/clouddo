@@ -7,6 +7,7 @@ import com.bootdo.clouddoadmin.dto.do2dto.UserConvert;
 import com.bootdo.clouddoadmin.service.RoleService;
 import com.bootdo.clouddoadmin.service.UserService;
 import com.bootdo.clouddoadmin.utils.MD5Utils;
+import com.bootdo.clouddoadmin.utils.SecuityUtils;
 import com.bootdo.clouddocommon.annotation.Log;
 import com.bootdo.clouddocommon.context.FilterContextHandler;
 import com.bootdo.clouddocommon.dto.LoginUserDTO;
@@ -46,9 +47,9 @@ public class UserController extends BaseController {
     @GetMapping("/currentUser")
 	LoginUserDTO currentUser(){
 		LoginUserDTO loginUserDTO = new LoginUserDTO();
-		loginUserDTO.setUserId(FilterContextHandler.getUserID());
+		loginUserDTO.setUserId(SecuityUtils.getCurrentUser().getId().toString());
 		loginUserDTO.setUsername(FilterContextHandler.getUsername());
-		loginUserDTO.setName(FilterContextHandler.getName());
+		loginUserDTO.setName(SecuityUtils.getCurrentUser().getName());
 		return loginUserDTO;
 	}
 
