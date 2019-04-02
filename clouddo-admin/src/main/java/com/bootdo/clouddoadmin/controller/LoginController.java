@@ -13,6 +13,7 @@ import com.bootdo.clouddocommon.dto.UserToken;
 import com.bootdo.clouddocommon.utils.JwtUtils;
 import com.bootdo.clouddocommon.utils.R;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
@@ -36,38 +37,8 @@ public class LoginController {
     TokenService tokenService;
     @Autowired
     MenuService menuService;
-
-    @Log("登录")
-    @PostMapping("/login")
-    R login(@Valid @RequestBody LoginDTO loginDTO, HttpServletRequest request, HttpServletResponse response) {
-        String username = loginDTO.getUsername().trim();
-        String password = loginDTO.getPwd().trim();
-        password = MD5Utils.encrypt(username, password);
-        Map<String, Object> param = new HashMap<>();
-        param.put("username", username);
-        List<UserDO> userDOs = userService.list(param);
-        if (userDOs.size() < 1) {
-            return R.error("用户或密码错误");
-        }
-        UserDO userDO = userDOs.get(0);
-        if (null == userDO || !userDO.getPassword().equals(password)) {
-            return R.error("用户或密码错误");
-        }
-        UserToken userToken = new UserToken(userDO.getUsername(), userDO.getUserId().toString(), userDO.getName());
-        String token = "";
-        try {
-            token = JwtUtils.generateToken(userToken, 2 * 60 * 60 * 1000);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        //首先清除用户缓存权限
-        menuService.clearCache(userDO.getUserId());
-        // String token = tokenService.createToken(userDO.getUserId());
-        return R.ok("登录成功")
-                .put("token", token).put("user", userDO)
-                .put("perms", menuService.PermsByUserId(userDO.getUserId()))
-                .put("router", menuService.RouterDTOsByUserId(userDO.getUserId()));
-    }
+    @Autowired
+    private ConsumerTokenServices consumerTokenServices;
 
     @GetMapping("/router")
     R router() {
@@ -76,8 +47,8 @@ public class LoginController {
 
 
     @RequestMapping("/logout")
-    R logout(HttpServletRequest request, HttpServletResponse response) {
-        menuService.clearCache(Long.parseLong(FilterContextHandler.getUserID()));
+    R logout(String token) {
+        consumerTokenServices.revokeToken(token);
         return R.ok();
     }
 
