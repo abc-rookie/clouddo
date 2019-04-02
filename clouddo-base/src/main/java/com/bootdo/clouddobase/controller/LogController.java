@@ -50,4 +50,6 @@ public class LogController {
         }
         return R.error();
     }
+
+
 }

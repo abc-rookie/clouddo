@@ -3,6 +3,7 @@ package com.bootdo.clouddoadmin.controller;
 import com.bootdo.clouddoadmin.domain.MenuDO;
 import com.bootdo.clouddoadmin.domain.Tree;
 import com.bootdo.clouddoadmin.service.MenuService;
+import com.bootdo.clouddoadmin.utils.SecuityUtils;
 import com.bootdo.clouddocommon.annotation.Log;
 import com.bootdo.clouddocommon.context.FilterContextHandler;
 import com.bootdo.clouddocommon.dto.MenuDTO;
@@ -24,13 +25,20 @@ public class MenuController {
     @Autowired
     MenuService menuService;
 
+    @Log("获取当前用户的菜单")
+    @GetMapping("currentUserMenus")
+    R currentUserMenus() {
+        return R.ok().put("currentUserMenus",menuService.RouterDTOsByUserId(SecuityUtils.getCurrentUser().getId()));
+    }
+
     @Log("访问菜单")
     @GetMapping("tree")
-    Tree<MenuDO>  tree(){
+    Tree<MenuDO> tree() {
         return menuService.getTree();
     }
+
     @GetMapping
-    List<Tree<MenuDO>>  list(){
+    List<Tree<MenuDO>> list() {
         return menuService.getTree().getChildren();
     }
 
@@ -47,30 +55,31 @@ public class MenuController {
     }
 
     @PutMapping()
-    R update(@RequestBody MenuDO menuDO){
-        if(menuService.update(menuDO)>0){
+    R update(@RequestBody MenuDO menuDO) {
+        if (menuService.update(menuDO) > 0) {
             return R.ok();
         }
-        return  R.error();
+        return R.error();
     }
+
     @PostMapping
-    R save(@RequestBody MenuDO menuDO){
-        return R.operate(menuService.save(menuDO)>0);
+    R save(@RequestBody MenuDO menuDO) {
+        return R.operate(menuService.save(menuDO) > 0);
     }
 
     @DeleteMapping()
-    R remove(Long id){
-        if(menuService.remove(id)>0){
+    R remove(Long id) {
+        if (menuService.remove(id) > 0) {
             return R.ok();
         }
         return R.error();
     }
 
     @GetMapping("userMenus")
-    List<MenuDTO> userMenus(){
+    List<MenuDTO> userMenus() {
         List<MenuDO> menuDOS = menuService.userMenus(Long.parseLong(FilterContextHandler.getUserID()));
         List<MenuDTO> menuDTOS = new ArrayList<>();
-        for (MenuDO menuDO:menuDOS){
+        for (MenuDO menuDO : menuDOS) {
             MenuDTO menuDTO = new MenuDTO();
             menuDTO.setMenuId(menuDO.getMenuId());
             menuDTO.setUrl(menuDO.getUrl());
@@ -81,26 +90,27 @@ public class MenuController {
     }
 
     @GetMapping("clearCache")
-    R clearCache(){
+    R clearCache() {
         Boolean flag = menuService.clearCache(Long.parseLong(FilterContextHandler.getUserID()));
-        if (flag){
-            return  R.ok();
+        if (flag) {
+            return R.ok();
         }
         return R.error();
     }
 
-    /**
-     * 当前用户菜单的树形结构
-     * @return
-     */
-    @RequestMapping("/currentUserMenus")
-    List<Tree<MenuDO>> currentUserMenus() {
-        List<Tree<MenuDO>> menus = menuService.listMenuTree(Long.parseLong(FilterContextHandler.getUserID()));
-        return menus;
-    }
+//    /**
+//     * 当前用户菜单的树形结构
+//     *
+//     * @return
+//     */
+//    @RequestMapping("/currentUserMenus")
+//    List<Tree<MenuDO>> currentUserMenus() {
+//        List<Tree<MenuDO>> menus = menuService.listMenuTree(Long.parseLong(FilterContextHandler.getUserID()));
+//        return menus;
+//    }
 
     @GetMapping("/roleId")
-    List<Long> menuIdsByRoleId(Long roleId){
+    List<Long> menuIdsByRoleId(Long roleId) {
         return menuService.MenuIdsByRoleId(roleId);
     }
 }

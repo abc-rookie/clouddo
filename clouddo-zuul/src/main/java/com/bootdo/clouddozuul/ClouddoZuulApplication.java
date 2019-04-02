@@ -11,6 +11,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+//@EnableOAuth2Sso
 @EnableFeignClients
 @EnableZuulProxy
 @EnableEurekaClient
