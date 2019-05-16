@@ -5,7 +5,7 @@
 ### 使用说明
 
 
-1.新建数据库，导数数据库脚本（clouddo-admin的根目录下）,修改clouddo-admin的数据库用户密码
+1.新建数据库clouddo，导入数据库脚本init.sql, 修改clouddo-admin的数据库用户密码
 
 2.启动clouddo-server 注册中心
 
@@ -16,6 +16,9 @@
 5.启动clouddo-admin 权限微服务
 
 6.启动clouddo-cms 内容管理微服务
+
+> 2-6的步骤可以直接通过sh start.sh启动全部, 
+终止项目运行执行sh stop.sh
 
 7.启动前端项目 https://gitee.com/lcg0124/clouddo-view.git
 ### 系统截图
