@@ -5,7 +5,13 @@
 ### 使用说明
 
 
-1.新建数据库clouddo，导入数据库脚本init.sql, 修改clouddo-admin的数据库用户密码
+1.执行数据库脚本init.sql,
+
+数据库中增加用户clouddo, 拥有数据库clouddo的增删改查权限
+
+`grant select,insert,update,delete on clouddo.* to clouddo@'%' Identified by "clouddo";`
+
+修改clouddo-admin的数据库用户密码
 
 2.启动clouddo-server 注册中心
 
